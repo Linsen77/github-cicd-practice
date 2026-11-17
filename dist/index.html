@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CI/CD 课堂练习 · Linsen77</title>
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #667085;
+      --line: #e4e7ec;
+      --blue: #1e66f5;
+      --soft: #f5f8ff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: linear-gradient(160deg, #eef4ff, #f8fafc 60%);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", Arial, sans-serif;
+      line-height: 1.7;
+    }
+
+    .card {
+      width: min(680px, 100%);
+      padding: 40px 38px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: 0 14px 40px rgba(15, 23, 42, .08);
+    }
+
+    .badge {
+      display: inline-block;
+      margin-bottom: 14px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: var(--soft);
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .04em;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 28px;
+      letter-spacing: -.01em;
+    }
+
+    .sub {
+      margin: 0 0 24px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    dl {
+      margin: 0;
+      display: grid;
+      grid-template-columns: 132px 1fr;
+      gap: 12px 16px;
+      padding-top: 20px;
+      border-top: 1px dashed var(--line);
+      font-size: 15px;
+    }
+
+    dt {
+      color: var(--muted);
+    }
+
+    dd {
+      margin: 0;
+      font-weight: 600;
+      word-break: break-all;
+    }
+
+    .ver {
+      color: #e03131;
+    }
+
+    .note {
+      margin: 24px 0 0;
+      padding: 12px 14px;
+      border-left: 3px solid var(--blue);
+      background: var(--soft);
+      color: var(--muted);
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="card">
+    <span class="badge">CI / CD PRACTICE</span>
+    <h1>我的 CI/CD 演示站点</h1>
+    <p class="sub">这个页面由 GitHub Actions 自动发布到 GitHub Pages，不是我手动上传的。</p>
+
+    <dl>
+      <dt>作者</dt>
+      <dd>Linsen77（演示标识）</dd>
+
+      <!-- 故障演练第 2 步：把下面这一行改成 版本二，提交后应能看到文字变化 -->
+      <dt>当前版本</dt>
+      <dd class="ver">版本一 · 首次自动发布</dd>
+
+      <dt>发布方式</dt>
+      <dd>peaceiris/actions-gh-pages@v4 → gh-pages 分支</dd>
+
+      <dt>页面打开时间</dt>
+      <dd><time id="opened-at">—</time></dd>
+    </dl>
+
+    <p class="note">
+      上面的「页面打开时间」取自浏览器本地时钟（<code>new Date()</code>），刷新就会变，<strong>不能</strong>当作构建或部署时间。
+      真正的发布时间请到仓库的 Actions 运行记录里核对，并对照当次提交 SHA。
+    </p>
+  </main>
+
+  <script>
+    const now = new Date();
+    const target = document.getElementById('opened-at');
+    target.dateTime = now.toISOString();
+    target.textContent = now.toLocaleString('zh-CN');
+  </script>
+</body>
+
+</html>

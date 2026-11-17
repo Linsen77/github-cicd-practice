@@ -1,0 +1,51 @@
+# 实验一：静态网页自动校验并部署到 GitHub Pages
+# 方案：peaceiris/actions-gh-pages@v4 → 推送到 gh-pages 分支
+# 前置：Settings → Pages → Source 选择 "Deploy from a branch" / 分支 gh-pages / 目录 / (root)
+# 前置：Settings → Actions → General → Workflow permissions 选择 "Read and write permissions"
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# 本工作流只读代码，但要把产物推到 gh-pages 分支，因此需要写权限
+permissions:
+  contents: write
+
+# 同一时间只允许一次部署，避免两次 push 抢同一个 gh-pages 分支
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy-to-pages:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 校验：入口文件必须存在且非空，否则直接失败，不进入部署步骤
+      - name: Validate publish entry
+        run: |
+          set -euo pipefail
+          echo "当前目录：$(pwd)"
+          ls -la dist
+          test -s dist/index.html
+          echo "校验通过：dist/index.html 存在且非空"
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: gh-pages
+          # gh-pages 分支只保留本次产物，不累积历史文件
+          force_orphan: true
+          # 默认会写入 .nojekyll，避免以下划线开头的文件被 Jekyll 忽略
+          enable_jekyll: false
+          user_name: github-actions[bot]
+          user_email: github-actions[bot]@users.noreply.github.com
+          commit_message: "deploy: ${{ github.sha }}"
